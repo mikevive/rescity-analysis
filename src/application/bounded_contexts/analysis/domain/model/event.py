@@ -1,6 +1,8 @@
 from datetime import datetime
 from bson import ObjectId
 
+from application.services._dtos.event_dto import EventDto
+
 class Event:
 
   def __init__(self, type: str, aggregate_id: ObjectId, aggregate_type: str, data: dict, id: ObjectId = None, timestamp: datetime = None) -> None:

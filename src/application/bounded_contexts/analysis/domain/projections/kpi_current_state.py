@@ -2,10 +2,11 @@ from abc import ABCMeta, abstractmethod
 from bson import ObjectId
 
 from application.bounded_contexts.analysis.domain.projections.projection import Projection
+from application.services._dtos.event_dto import EventDto
 
 class KpiCurrentState(Projection):
 
-  def __init__(self, name: str, id: ObjectId = None) -> None:
+  def __init__(self, id: ObjectId, name: str) -> None:
     super().__init__(id)
     self._name = name
 
@@ -15,11 +16,11 @@ class KpiCurrentState(Projection):
 class KpiCurrentStateService(metaclass=ABCMeta):
 
   @abstractmethod
-  def create(self, id: ObjectId, name: str) -> None:
+  def create(self, event_dto: EventDto) -> None:
     raise NotImplementedError
 
   @abstractmethod
-  def update_name(self, kpi_current_state: KpiCurrentState) -> None:
+  def update_name(self, event_dto: EventDto) -> None:
     raise NotImplementedError
 
 

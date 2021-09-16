@@ -1,7 +1,4 @@
 from abc import ABCMeta, abstractmethod
-import time
-
-from application.bounded_contexts.analysis.domain.model.event import Event
 
 class EventDto:
 
@@ -38,36 +35,6 @@ class EventDto:
 
   def get_timestamp(self) -> int:
     return self.timestamp
-
-class EventDtoFactory():
-
-  def create(
-    id: str,
-    type: str,
-    aggregate_id: str,
-    aggregate_type: str,
-    data: dict,
-    timestamp: int,
-  ) -> EventDto:
-    return EventDto(
-      id,
-      type,
-      aggregate_id,
-      aggregate_type,
-      data,
-      timestamp
-    )
-
-  def create_with_event(event: Event) -> EventDto:
-    return EventDto(
-      str(event.get_id()),
-      event.get_type(),
-      str(event.get_aggregate_id()),
-      event.get_aggregate_type(),
-      event.get_data(),
-      int(time.mktime(event.get_timestamp().timetuple()))
-    )
-
 
 class EventDtoProducer(metaclass=ABCMeta):
 
