@@ -1,15 +1,17 @@
 from bson.objectid import ObjectId
-from application.bounded_contexts.analysis.domain.model.event import Event, EventProducer
+from application.bounded_contexts.analysis.domain.model.event import Event
 from application.bounded_contexts.analysis.domain.model.kpi import Kpi, KpiFactory, KpiService
+from application.dtos.event_dto import EventDto, EventDtoFactory, EventDtoProducer
 
 class KpiServiceV1(KpiService):
 
-  def __init__(self, event_producer: EventProducer):
-    self._event_producer: EventProducer = event_producer
+  def __init__(self, event_producer: EventDtoProducer):
+    self._event_dto_producer: EventDtoProducer = event_producer
 
   def create(self, name: str) -> str:
     kpi, event = KpiFactory.create(name)
-    self._event_producer.publish('analysis', event)
+    event_dto: EventDto = EventDtoFactory.create_with_event(event)
+    self._event_dto_producer.publish('kpi', event_dto)
 
     return str(kpi.get_id())
 

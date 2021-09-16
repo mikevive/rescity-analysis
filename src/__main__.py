@@ -1,4 +1,5 @@
-import threading
+from threading import Thread
+from typing import List
 from flask import Flask
 from kafka.consumer.group import KafkaConsumer
 from mongoengine import connect
@@ -8,13 +9,13 @@ from bson import json_util
 # Ports
 from application.bounded_contexts.analysis.domain.projections.kpi_current_state import KpiCurrentStateRepository, KpiCurrentStateService
 from application.bounded_contexts.analysis.domain.model.kpi import KpiService
-from application.bounded_contexts.analysis.domain.model.event import EventProducer
+from application.dtos.event_dto import EventDtoProducer
 
 # Driven Adapters
 from application.services.kpi_service_v1 import KpiServiceV1
 from application.services.kpi_current_state_service_v1 import KpiCurrentStateServiceV1
 from infrastructure.repositories.projections.kpi_current_state_mongodb import KpiCurrentStateMongodbRepository
-from infrastructure.brokers.producers.event_kafka_producer import EventKafkaProducer
+from infrastructure.brokers.producers.event_dto_kafka_producer import EventDtoKafkaProducer
 
 # Driving Adapters
 from interface.controllers.kpi_controller import KpiController
@@ -42,7 +43,7 @@ kafka_producer: KafkaProducer = KafkaProducer(
   value_serializer=json_serializer
 )
 
-event_producer: EventProducer = EventKafkaProducer(kafka_producer)
+event_dto_producer: EventDtoProducer = EventDtoKafkaProducer(kafka_producer)
 
 
 def json_deserializer(data) -> str:
@@ -51,7 +52,7 @@ def json_deserializer(data) -> str:
 # Kpi Current State Consumer Config
 def create_kpi_current_state_consumer():
   kpi_current_state_consumer: KafkaConsumer = KafkaConsumer(
-    'analysis',
+    'kpi',
     bootstrap_servers=['127.0.0.1:9092'],
     auto_offset_reset='earliest',
     group_id='kpi_current_state_kafka_consumer',
@@ -66,13 +67,14 @@ def create_kpi_current_state_consumer():
   )
 
 # Kpi Controller Config
-kpi_service: KpiService = KpiServiceV1(event_producer)
+kpi_service: KpiService = KpiServiceV1(event_dto_producer)
 kpi_controller: KpiController = KpiController(kpi_service)
 
 
 # Start Consumers
-threading.Thread(target=create_kpi_current_state_consumer).start()
-
+create_kpi_current_state_consumer_thread: Thread = Thread(target=create_kpi_current_state_consumer)
+create_kpi_current_state_consumer_thread.daemon = True
+create_kpi_current_state_consumer_thread.start()
 
 # Start Controllers
 app.register_blueprint(kpi_controller.get_blueprint(), url_prefix='/v1')

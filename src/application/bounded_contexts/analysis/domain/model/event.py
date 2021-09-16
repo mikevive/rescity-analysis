@@ -1,4 +1,3 @@
-from abc import ABCMeta, abstractmethod
 from datetime import datetime
 from bson import ObjectId
 
@@ -29,9 +28,3 @@ class Event:
 
   def get_timestamp(self) -> datetime:
     return self._timestamp
-
-class EventProducer(metaclass=ABCMeta):
-
-  @abstractmethod
-  def publish(self, topic: str, event: Event) -> None:
-    raise NotImplementedError
