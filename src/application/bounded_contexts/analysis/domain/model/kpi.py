@@ -7,21 +7,19 @@ from application.bounded_contexts.analysis.domain.model.event import Event
 
 class Kpi(Entity):
 
-  def __init__(self, id: ObjectId = None, events: list[Event] = None) -> None:
-    super().__init__(id, events)
+  def __init__(self, id: ObjectId = None) -> None:
+    super().__init__(id)
 
   def update_name(self, name:str) -> Event:
     event: Event = KpiEvent.NameUpdated(self.get_id(), name)
-    self.add_event(event)
     return event
 
 
 class KpiFactory():
 
-  def create(name:str) -> Tuple[Kpi, Event]:
+  def create(name: str) -> Tuple[Kpi, Event]:
     kpi: Kpi = Kpi()
     event: Event = KpiEvent.Created(kpi.get_id(), name)
-    kpi.add_event(event)
     return kpi, event
 
 
@@ -38,12 +36,12 @@ class KpiEvent:
       super().__init__('name_updated', kpi_id, 'kpi', data)
 
 
-class KpiRepository(metaclass=ABCMeta):
+class KpiService(metaclass=ABCMeta):
 
   @abstractmethod
-  def get_by_id(self, kpi_id: ObjectId) -> Kpi:
+  def create(self, name: str) -> str:
     raise NotImplementedError
 
   @abstractmethod
-  def save(self, kpi_event: Event) -> None:
+  def update_name(self, id: ObjectId, name:str) -> str:
     raise NotImplementedError

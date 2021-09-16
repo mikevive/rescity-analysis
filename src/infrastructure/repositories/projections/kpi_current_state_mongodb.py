@@ -1,33 +1,35 @@
 from application.bounded_contexts.analysis.domain.projections.kpi_current_state import KpiCurrentState, KpiCurrentStateRepository
-from mongoengine import Document, StringField
+from mongoengine import Document, StringField, ObjectIdField
 from bson import ObjectId
 
 class KpiCurrentStateMongodb(Document):
   meta = {'collection': 'kpi_current_state'}
+  id = ObjectIdField(primary_key=True, required = True)
   name = StringField(max_length = 50, required = True)
 
 
 class KpiCurrentStateMongodbRepository(KpiCurrentStateRepository):
 
-  def __init__(self):
-    self._kpi_current_state_mongodb_mapper = KpiCurrentStateMongodbMapper()
-
-  def get_by_id(self, id: int) -> KpiCurrentState:
-    kpi_current_state_mongodb = KpiCurrentStateMongodb.objects.get(id = ObjectId(id))
-    kpi_current_state = self._kpi_current_state_mongodb_mapper.to_entity(kpi_current_state_mongodb)
+  def get_by_id(self, id: ObjectId) -> KpiCurrentState:
+    kpi_current_state_mongodb = KpiCurrentStateMongodb.objects.get(id = id)
+    kpi_current_state = self.__to_entity(kpi_current_state_mongodb)
     return kpi_current_state
 
-  def get_all(self):
+  def get_all(self) -> list[KpiCurrentState]:
     raise NotImplementedError
 
-  def save(self, kpi_current_state: KpiCurrentState):
-    kpi_current_state_mongodb: KpiCurrentStateMongodb = self._kpi_current_state_mongodb_mapper.to_data(kpi_current_state)
+  def save(self, kpi_current_state: KpiCurrentState) -> None:
+    kpi_current_state_mongodb: KpiCurrentStateMongodb = self.__to_data(kpi_current_state)
     kpi_current_state_mongodb.save()
 
-class KpiCurrentStateMongodbMapper():
+  def __to_entity(self, kpi_current_state_mongodb: KpiCurrentStateMongodb) -> KpiCurrentState:
+    return KpiCurrentState(
+      id = kpi_current_state_mongodb.id,
+      name = kpi_current_state_mongodb.name
+    )
 
-  def to_entity(self, kpi_current_state_mongodb: KpiCurrentStateMongodb) -> KpiCurrentState:
-    return KpiCurrentState(name = kpi_current_state_mongodb.name)
-
-  def to_data(self, kpi_current_state: KpiCurrentState) -> KpiCurrentStateMongodb:
-    return KpiCurrentStateMongodb(name = kpi_current_state.name)
+  def __to_data(self, kpi_current_state: KpiCurrentState) -> KpiCurrentStateMongodb:
+    return KpiCurrentStateMongodb(
+      id = kpi_current_state.get_id(),
+      name = kpi_current_state.get_name()
+    )

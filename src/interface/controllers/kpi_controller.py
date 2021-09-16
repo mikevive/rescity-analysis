@@ -1,12 +1,12 @@
 from flask import Blueprint, request, Response
 from application.bounded_contexts.analysis.domain.projections.kpi_current_state import KpiCurrentState
-from application.services.kpi_service import KpiService
+from application.bounded_contexts.analysis.domain.model.kpi import Kpi, KpiService
 from bson import json_util, ObjectId
 
 class KpiController:
 
   def __init__(self, kpi_service: KpiService):
-    self._kpi_service = kpi_service
+    self._kpi_service: KpiService = kpi_service
 
   def get_blueprint(self):
     kpi_controller = Blueprint('kpi_controller', __name__)

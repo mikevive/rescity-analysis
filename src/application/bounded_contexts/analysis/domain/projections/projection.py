@@ -1,7 +1,7 @@
 from abc import ABCMeta
 from bson import ObjectId
 
-class Entity(metaclass=ABCMeta):
+class Projection(metaclass=ABCMeta):
 
   def __init__(self, id: ObjectId = None) -> None:
     self._id: ObjectId = id if id != None else ObjectId()
