@@ -2,7 +2,7 @@ import time
 
 
 from application.bounded_contexts.analysis.domain.model.event import Event
-from application.services._dtos.event_dto import EventDto
+from application.services.dtos.event_dto import EventDto
 
 
 class EventMapper:

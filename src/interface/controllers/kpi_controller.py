@@ -1,5 +1,5 @@
 from flask import Blueprint, request, Response
-from application.bounded_contexts.analysis.domain.projections.kpi_current_state import KpiCurrentState
+from application.services.projections.kpi_current_state import KpiCurrentState
 from application.bounded_contexts.analysis.domain.model.kpi import Kpi, KpiService
 from bson import json_util, ObjectId
 

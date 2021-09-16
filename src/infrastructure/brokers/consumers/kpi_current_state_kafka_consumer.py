@@ -1,8 +1,8 @@
 from bson.objectid import ObjectId
 from kafka import KafkaConsumer
 
-from application.bounded_contexts.analysis.domain.projections.kpi_current_state import KpiCurrentState, KpiCurrentStateService
-from application.services._dtos.event_dto import EventDto
+from application.services.projections.kpi_current_state import KpiCurrentState, KpiCurrentStateService
+from application.services.dtos.event_dto import EventDto
 
 class KpiCurrentStateKafkaConsumer:
 

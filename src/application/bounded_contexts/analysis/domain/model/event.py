@@ -1,7 +1,7 @@
 from datetime import datetime
 from bson import ObjectId
 
-from application.services._dtos.event_dto import EventDto
+from application.services.dtos.event_dto import EventDto
 
 class Event:
 

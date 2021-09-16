@@ -7,9 +7,9 @@ from kafka import KafkaProducer
 from bson import json_util
 
 # Ports
-from application.bounded_contexts.analysis.domain.projections.kpi_current_state import KpiCurrentStateRepository, KpiCurrentStateService
+from application.services.projections.kpi_current_state import KpiCurrentStateRepository, KpiCurrentStateService
 from application.bounded_contexts.analysis.domain.model.kpi import KpiService
-from application.services._dtos.event_dto import EventDtoProducer
+from application.services.dtos.event_dto import EventDtoProducer
 
 # Driven Adapters
 from application.services.kpi_service_v1 import KpiServiceV1

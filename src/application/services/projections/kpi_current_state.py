@@ -1,8 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from bson import ObjectId
 
-from application.bounded_contexts.analysis.domain.projections.projection import Projection
-from application.services._dtos.event_dto import EventDto
+from application.services.projections.projection import Projection
+from application.services.dtos.event_dto import EventDto
 
 class KpiCurrentState(Projection):
 

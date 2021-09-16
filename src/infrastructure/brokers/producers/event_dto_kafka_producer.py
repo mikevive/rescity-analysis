@@ -1,7 +1,7 @@
 from kafka import KafkaProducer
 
 
-from application.services._dtos.event_dto import EventDto, EventDtoProducer
+from application.services.dtos.event_dto import EventDto, EventDtoProducer
 
 class EventDtoKafkaProducer(EventDtoProducer):
 

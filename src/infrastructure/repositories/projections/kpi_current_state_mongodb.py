@@ -1,4 +1,4 @@
-from application.bounded_contexts.analysis.domain.projections.kpi_current_state import KpiCurrentState, KpiCurrentStateRepository
+from application.services.projections.kpi_current_state import KpiCurrentState, KpiCurrentStateRepository
 from mongoengine import Document, StringField, ObjectIdField
 from bson import ObjectId
 

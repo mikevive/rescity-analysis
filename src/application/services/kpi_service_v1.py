@@ -1,10 +1,12 @@
 from bson.objectid import ObjectId
 from application.bounded_contexts.analysis.domain.model.event import Event
 from application.bounded_contexts.analysis.domain.model.kpi import Kpi, KpiFactory, KpiService
-from application.services._dtos.event_dto import EventDto, EventDtoProducer
-from application.services._mappers.event_mapper import EventMapper
+from application.services.dtos.event_dto import EventDto, EventDtoProducer
+from application.services.mappers.event_mapper import EventMapper
 
 class KpiServiceV1(KpiService):
+
+  # TODO implement DTOs
 
   def __init__(self, event_producer: EventDtoProducer):
     self._event_dto_producer: EventDtoProducer = event_producer
