@@ -1,6 +1,5 @@
 from kafka import KafkaProducer
 
-
 from application.services.dtos.event_dto import EventDto, EventDtoProducer
 
 class EventDtoKafkaProducer(EventDtoProducer):
@@ -9,5 +8,5 @@ class EventDtoKafkaProducer(EventDtoProducer):
       self._kafka_producer: KafkaProducer = kafka_producer
 
   def publish(self, topic: str, event_dto: EventDto) -> None:
-    print(f'>> Enviando {event_dto.get_id()} al topico {topic}')
+    print(f'>> Sending {event_dto.get_id()} to {topic} topic')
     self._kafka_producer.send(topic, event_dto)

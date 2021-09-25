@@ -9,14 +9,14 @@ class EventDto:
     aggregate_id: str,
     aggregate_type: str,
     data: dict,
-    timestamp: int,
+    created_datetime: int,
   ) -> None:
     self.id: str = id
     self.type: str = type
     self.aggregate_id: str = aggregate_id
     self.aggregate_type: str = aggregate_type
     self.data: dict = data
-    self.timestamp: int = timestamp
+    self.created_datetime: int = created_datetime
 
   def get_id(self) -> str:
     return self.id
@@ -33,8 +33,8 @@ class EventDto:
   def get_data(self) -> dict:
     return self.data
 
-  def get_timestamp(self) -> int:
-    return self.timestamp
+  def get_created_datetime(self) -> int:
+    return self.created_datetime
 
 class EventDtoProducer(metaclass=ABCMeta):
 
