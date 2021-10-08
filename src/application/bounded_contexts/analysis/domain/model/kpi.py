@@ -3,6 +3,7 @@ from typing import Tuple
 
 from application.bounded_contexts.analysis.domain.model._entity import Entity
 from application.bounded_contexts.analysis.domain.model._event import Event
+
 from application.services.dtos.event_dto import EventDto
 from application.services.dtos.kpi_create_dto import KpiCreateDto
 from application.services.dtos.kpi_created_dto import KpiCreatedDto
@@ -57,13 +58,30 @@ class Kpi(Entity):
     event: Event = Kpi.Delete(self.get_id())
     return event
 
-  def calculate(self, equation:str, input:str, place_config) -> Event:
-    x: int = input
-    for key in place_config:
-      globals()[key] = place_config[key]
+  # TODO: Type constant list
+  def calculate(self, equation:str, input:float, constants: list, setpoints: list) -> Event:
+    globals()['x'] = input
+    for constant in constants:
+      globals()[constant.get_name()] = constant.get_value()
 
-    result: int = eval(equation)
-    alarm: str = 1
+    result: float = eval(equation)
+    # TODO: Calculate Alarm
+    alarm: str = None
+    print(f'result:{result}')
+    print(f'setpoints found on kpi_config:{len(setpoints)}')
+    for setpoint in setpoints:
+      print(f"{result} is {setpoint.get_activation()} {setpoint.get_value()}")
+      if(setpoint.get_activation() == 'GREATER_THAN' and result > setpoint.get_value()):
+        print("YES")
+        alarm = setpoint.get_alarm_id()
+
+      elif(setpoint.get_activation() == 'LESS_THAN' and result < setpoint.get_value()):
+        print("YES")
+        alarm = setpoint.get_alarm_id()
+
+      else:
+        print("NO")
+    # TODO: Get Setpoint
     setpoint: str = 1000
     event: Event = Kpi.Calculated(self.get_id(), result, alarm, setpoint)
     return event
@@ -83,7 +101,7 @@ class KpiFactory():
 class KpiService(metaclass=ABCMeta):
 
   @abstractmethod
-  def create(self, kpi_create_dto: KpiCreateDto) -> str:
+  def create(self, kpi_create_dto: KpiCreateDto) -> KpiCreatedDto:
     raise NotImplementedError
 
   @abstractmethod

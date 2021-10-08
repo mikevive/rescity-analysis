@@ -1,18 +1,37 @@
+from injector import inject
 from kafka import KafkaConsumer
-
+from bson import json_util
+from threading import Thread
 from application.bounded_contexts.analysis.domain.model.kpi import KpiService
 from application.services.dtos.event_dto import EventDto
 
 class OtherSourcesKafkaConsumer:
 
-  def __init__(self, kafka_consumer: KafkaConsumer, kpi_service: KpiService) -> None:
-    self._kafka_consumer: KafkaConsumer = kafka_consumer
-    self._kpi_service: KpiService = kpi_service
+  @inject
+  def __init__(self, kpi_service: KpiService) -> None:
 
-    hanlders: dict = {
-        'created': self._kpi_service.calculate
-      }
+    # Set Handlers
+    self._hanlders: dict = {
+      'created': kpi_service.calculate
+    }
 
+    # Kafka Consumer Config
+    self._kafka_consumer: KafkaConsumer = KafkaConsumer(
+      'other_sources',
+      bootstrap_servers = ['127.0.0.1:9092'],
+      auto_offset_reset = 'earliest',
+      group_id = 'other_sources_kafka_consumer',
+      value_deserializer = lambda data: json_util.loads(data)
+    )
+
+    # Start Kafka Consumers as Threads
+    Thread(
+      target = self.__start_tread,
+      daemon = True
+    ).start()
+
+
+  def __start_tread(self):
     for msg in self._kafka_consumer:
       topic: str = msg.topic
       event_dto: EventDto = EventDto(**msg.value)
@@ -21,4 +40,7 @@ class OtherSourcesKafkaConsumer:
       event_type: str = event_dto.get_type()
       print(f'>> Consuming event {event_id} from {topic} with type {event_type}')
 
-      hanlders[event_type](event_dto)
+      try:
+        self._hanlders[event_type](event_dto)
+      except KeyError:
+        pass

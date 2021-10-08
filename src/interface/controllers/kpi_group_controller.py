@@ -2,46 +2,48 @@ from flask import Blueprint, request, Response
 from bson import json_util
 from injector import inject
 
-from application.services.dtos.kpi_create_dto import KpiCreateDto
-from application.services.dtos.kpi_created_dto import KpiCreatedDto
-from application.services.dtos.kpi_update_dto import KpiUpdateDto
+from application.services.dtos.kpi_group_create_dto import KpiGroupCreateDto
+from application.services.dtos.kpi_group_created_dto import KpiGroupCreatedDto
+from application.services.dtos.kpi_group_update_dto import KpiGroupUpdateDto
 from application.services.dtos.error_dto import ErrorDto
-from application.bounded_contexts.analysis.domain.model.kpi import KpiService
-from infrastructure.repositories.exceptions.exceptions import KpiNotFoundError
+from application.bounded_contexts.analysis.domain.model.kpi_group import KpiGroupService
 
-kpi_controller = Blueprint('kpi_controller', __name__)
-
+kpi_group_controller = Blueprint('kpi_group_controller', __name__)
 
 @inject
-@kpi_controller.route('/kpis', methods=['POST'])
-def create(kpi_service: KpiService):
+@kpi_group_controller.route('/kpi-groups', methods=['POST'])
+def create(kpi_group_service: KpiGroupService):
   name: str = request.json['name']
-  equation: str = request.json['equation']
-  units: str = request.json['units']
+  kpis: str = request.json['kpis']
 
   try:
-    kpi_create_dto: KpiCreateDto = KpiCreateDto(name, equation, units)
+    kpi_group_create_dto: KpiGroupCreateDto = KpiGroupCreateDto(name, kpis)
   except Exception as error:
     code, message, description = error.args
     error_dto: ErrorDto = ErrorDto(code, message, description)
     error = json_util.dumps(error_dto.__dict__)
     return Response(error, mimetype = 'application/json', status = 400)
 
-  kpi_created_dto: KpiCreatedDto = kpi_service.create(kpi_create_dto)
+  try:
+    kpi_group_created_dto: KpiGroupCreatedDto = kpi_group_service.create(kpi_group_create_dto)
+  except Exception as error:
+    code, message, description = error.args
+    error_dto: ErrorDto = ErrorDto(code, message, description)
+    error = json_util.dumps(error_dto.__dict__)
+    return Response(error, mimetype = 'application/json', status = 404)
 
-  response = json_util.dumps(kpi_created_dto.__dict__)
+  response = json_util.dumps(kpi_group_created_dto.__dict__)
   return Response(response, mimetype = 'application/json', status = 202)
 
 
 @inject
-@kpi_controller.route('/kpis/<id>', methods=['PUT'])
-def update(kpi_service: KpiService, id):
+@kpi_group_controller.route('/kpi-groups/<id>', methods=['PUT'])
+def update(kpi_group_service: KpiGroupService, id):
   name: str = request.json['name']
-  equation: str = request.json['equation']
-  units: str = request.json['units']
+  kpis: str = request.json['kpis']
 
   try:
-    kpi_update_dto = KpiUpdateDto(id, name, equation, units)
+    kpi_group_update_dto = KpiGroupUpdateDto(id, name, kpis)
   except Exception as error:
     code, message, description = error.args
     error_dto: ErrorDto = ErrorDto(code, message, description)
@@ -49,10 +51,9 @@ def update(kpi_service: KpiService, id):
     return Response(error, mimetype = 'application/json', status = 400)
 
   try:
-    kpi_service.update(kpi_update_dto)
-  except KpiNotFoundError as error:
+    kpi_group_service.update(kpi_group_update_dto)
+  except Exception as error:
     code, message, description = error.args
-
     error_dto: ErrorDto = ErrorDto(code, message, description)
     error = json_util.dumps(error_dto.__dict__)
     return Response(error, mimetype = 'application/json', status = 404)
@@ -61,11 +62,11 @@ def update(kpi_service: KpiService, id):
 
 
 @inject
-@kpi_controller.route('/kpis/<id>', methods=['DELETE'])
-def delete(kpi_service: KpiService, id):
+@kpi_group_controller.route('/kpi-groups/<id>', methods=['DELETE'])
+def delete(kpi_group_service: KpiGroupService, id):
 
   try:
-    kpi_created_dto = KpiCreatedDto(id)
+    kpi_group_created_dto = KpiGroupCreatedDto(id)
   except Exception as error:
     code, message, description = error.args
     error_dto: ErrorDto = ErrorDto(code, message, description)
@@ -73,8 +74,8 @@ def delete(kpi_service: KpiService, id):
     return Response(error, mimetype = 'application/json', status = 400)
 
   try:
-    kpi_service.delete(kpi_created_dto)
-  except KpiNotFoundError as error:
+    kpi_group_service.delete(kpi_group_created_dto)
+  except Exception as error:
     code, message, description = error.args
     error_dto: ErrorDto = ErrorDto(code, message, description)
     error = json_util.dumps(error_dto.__dict__)

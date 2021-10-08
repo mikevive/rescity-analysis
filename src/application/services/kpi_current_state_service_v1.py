@@ -1,3 +1,5 @@
+from injector import inject
+
 from application.services.dtos.kpi_created_dto import KpiCreatedDto
 from application.services.projections.kpi_current_state import KpiCurrentState, KpiCurrentStateRepository, KpiCurrentStateService
 from application.services.dtos.event_dto import EventDto
@@ -5,6 +7,7 @@ from infrastructure.repositories.exceptions.exceptions import KpiNotFoundError
 
 class KpiCurrentStateServiceV1(KpiCurrentStateService):
 
+  @inject
   def __init__(self, kpi_current_state_repository: KpiCurrentStateRepository):
     self._kpi_current_state_repository: KpiCurrentStateRepository = kpi_current_state_repository
 

@@ -6,6 +6,8 @@ from application.services.dtos.exceptions.exceptions import InvalidEquationError
 class KpiCreateDto():
 
   def __init__(self, name: str, equation: str, units: str) -> None:
+
+    #TODO: Centralize DTO validations
     if(len(name) <= 50):
       self.name = name
     else:
