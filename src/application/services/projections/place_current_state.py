@@ -4,11 +4,11 @@ from application.services.dtos.place_created_dto import PlaceCreatedDto
 from application.services.projections._projection import Projection
 from application.services.dtos.event_dto import EventDto
 
-class Setpoint:
+class AlarmConfig:
 
-  def __init__(self, activation: str, value: float, alarm_id: str) -> None:
+  def __init__(self, activation: str, setpoint: float, alarm_id: str) -> None:
     self._activation: str = activation
-    self._value: int = value
+    self._setpoint: int = setpoint
     self._alarm_id: str = alarm_id
 
   def get_activation(self) -> str:
@@ -17,11 +17,11 @@ class Setpoint:
   def set_activation(self, activation: str) -> None:
     self._activation = activation
 
-  def get_value(self) -> float:
-    return self._value
+  def get_setpoint(self) -> float:
+    return self._setpoint
 
-  def set_value(self, value: float) -> None:
-    self._value = value
+  def set_setpoint(self, setpoint: float) -> None:
+    self._setpoint = setpoint
 
   def get_alarm_id(self) -> str:
     return self._alarm_id
@@ -50,11 +50,11 @@ class Constant:
 
 class KpiConfig:
 
-  def __init__(self, kpi_id: str, sensor_id: str, constants: list[Constant] = [], setpoints: list[Setpoint] = []) -> None:
+  def __init__(self, kpi_id: str, sensor_id: str, constants: list[Constant] = None, alarms_config: list[AlarmConfig] = None) -> None:
     self._kpi_id: str = kpi_id
     self._sensor_id: str = sensor_id
-    self._constants: list[Constant] = constants
-    self._setpoints: list[Setpoint] = setpoints
+    self._constants: list[Constant] = constants or []
+    self._alarms_config: list[AlarmConfig] = alarms_config or []
 
   def get_kpi_id(self) -> str:
     return self._kpi_id
@@ -65,8 +65,8 @@ class KpiConfig:
   def get_constants(self) -> list[Constant]:
     return self._constants
 
-  def get_setpoints(self) -> list[Constant]:
-    return self._setpoints
+  def get_alarms_config(self) -> list[Constant]:
+    return self._alarms_config
 
   def set_sensor_id(self, sensor_id: str) -> None:
     self._sensor_id = sensor_id
@@ -74,8 +74,8 @@ class KpiConfig:
   def set_constants(self, constants: list[Constant]) -> None:
     self._constants = constants
 
-  def set_setpoints(self, setpoints: list[Setpoint]) -> None:
-    self._setpoints = setpoints
+  def set_alarms_config(self, alarms_config: list[AlarmConfig]) -> None:
+    self._alarms_config = alarms_config
 
 
 class KpiGroupConfig:

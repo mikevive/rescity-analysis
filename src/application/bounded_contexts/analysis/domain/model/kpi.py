@@ -40,11 +40,19 @@ class Kpi(Entity):
       super().__init__('deleted', kpi_id, 'kpi', data)
 
   class Calculated(Event):
-    def __init__(self, kpi_id: str, value: float, alarm: str, setpoint: str) -> None:
+    def __init__(self, kpi_id: str, value: float, alarms: list) -> None:
+
+      alarms_mapped: list = []
+      for alarm in alarms:
+        alarms_mapped.append({
+          'alarm_id:': alarm.get_alarm_id(),
+          'activation:': alarm.get_activation(),
+          'setpoint:': alarm.get_setpoint()
+        })
+
       data: dict = {
         'value': value,
-        'alarm': alarm,
-        'setpoint': setpoint
+        'alarms': alarms_mapped
       }
       super().__init__('calculated', kpi_id, 'kpi', data)
 
@@ -59,31 +67,30 @@ class Kpi(Entity):
     return event
 
   # TODO: Type constant list
-  def calculate(self, equation:str, input:float, constants: list, setpoints: list) -> Event:
+  def calculate(self, equation:str, input:float, constants: list, alarms_config: list) -> Event:
     globals()['x'] = input
     for constant in constants:
       globals()[constant.get_name()] = constant.get_value()
 
     result: float = eval(equation)
     # TODO: Calculate Alarm
-    alarm: str = None
+    alarms: list = []
     print(f'result:{result}')
-    print(f'setpoints found on kpi_config:{len(setpoints)}')
-    for setpoint in setpoints:
-      print(f"{result} is {setpoint.get_activation()} {setpoint.get_value()}")
-      if(setpoint.get_activation() == 'GREATER_THAN' and result > setpoint.get_value()):
+    print(f'alarms_config found on kpi_config:{len(alarms_config)}')
+    for alarm_config in alarms_config:
+      print(f"{result} is {alarm_config.get_activation()} {alarm_config.get_setpoint()}")
+      if(alarm_config.get_activation() == 'GREATER_THAN' and result > alarm_config.get_setpoint()):
         print("YES")
-        alarm = setpoint.get_alarm_id()
+        alarms.append(alarm_config)
 
-      elif(setpoint.get_activation() == 'LESS_THAN' and result < setpoint.get_value()):
+      elif(alarm_config.get_activation() == 'LESS_THAN' and result < alarm_config.get_setpoint()):
         print("YES")
-        alarm = setpoint.get_alarm_id()
+        alarms.append(alarm_config)
 
       else:
         print("NO")
     # TODO: Get Setpoint
-    setpoint: str = 1000
-    event: Event = Kpi.Calculated(self.get_id(), result, alarm, setpoint)
+    event: Event = Kpi.Calculated(self.get_id(), result, alarms)
     return event
 
 

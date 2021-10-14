@@ -11,7 +11,7 @@ from application.services.dtos.kpi_created_dto import KpiCreatedDto
 from application.services.mappers.kpi_created_mapper import KpiCreatedMapper
 from application.services.projections.kpi_current_state import KpiCurrentState, KpiCurrentStateService
 from application.services.projections.place_current_state import KpiConfig, PlaceCurrentState, PlaceCurrentStateService
-from infrastructure.repositories.exceptions.exceptions import KpiNotFoundError
+from infrastructure.repositories.exceptions.exceptions import KpiNotFoundError, PlaceNotFoundError
 
 class KpiServiceV1(KpiService):
 
@@ -68,8 +68,10 @@ class KpiServiceV1(KpiService):
 
     place_created_dto: PlaceCreatedDto = PlaceCreatedDto(place_id)
 
-    # TODO: Excelption handler
-    place_current_state: PlaceCurrentState = self._place_current_state_service.get_by_id(place_created_dto)
+    try:
+      place_current_state: PlaceCurrentState = self._place_current_state_service.get_by_id(place_created_dto)
+    except PlaceNotFoundError as error:
+      raise error
 
     for kpi_group_config in place_current_state.get_kpi_groups_config():
       for kpi_config in kpi_group_config.get_kpis_config():
@@ -85,7 +87,7 @@ class KpiServiceV1(KpiService):
           kpi: Kpi = KpiFactory.instantiate(kpi_config.get_kpi_id())
           equation: str = kpi_current_state.get_equation()
 
-          event: Event =  kpi.calculate(equation, sensor_value, kpi_config.get_constants(), kpi_config.get_setpoints())
+          event: Event = kpi.calculate(equation, sensor_value, kpi_config.get_constants(), kpi_config.get_alarms_config())
           event_dto: EventDto = EventMapper.to_dto(event)
           self._event_dto_producer.publish('kpi', event_dto)
 

@@ -1,13 +1,13 @@
 from bson import ObjectId
 from mongoengine import Document, EmbeddedDocument, StringField, ObjectIdField, DateTimeField, EmbeddedDocumentListField, FloatField
 
-from application.services.projections.place_current_state import Constant, KpiConfig, KpiGroupConfig, PlaceCurrentState, PlaceCurrentStateRepository, Setpoint
+from application.services.projections.place_current_state import Constant, KpiConfig, KpiGroupConfig, PlaceCurrentState, PlaceCurrentStateRepository, AlarmConfig
 from infrastructure.repositories.exceptions.exceptions import PlaceNotFoundError
 
-class SetpointMongodb(EmbeddedDocument):
+class AlarmConfigMongodb(EmbeddedDocument):
   meta = {'collection': 'place_current_state'}
   activation = StringField(required = True)
-  value = FloatField(required = True)
+  setpoint = FloatField(required = True)
   alarm_id = ObjectIdField(required = True)
 
 
@@ -22,13 +22,13 @@ class KpiConfigMongodb(EmbeddedDocument):
   kpi_id = ObjectIdField(primary_key=True, required = True)
   sensor_id = ObjectIdField(required = True)
   constants = EmbeddedDocumentListField(ConstantMongodb, default= [])
-  setpoints = EmbeddedDocumentListField(SetpointMongodb, default= [])
+  alarms_config = EmbeddedDocumentListField(AlarmConfigMongodb, default= [])
 
 
 class KpiGroupConfigMongodb(EmbeddedDocument):
   meta = {'collection': 'place_current_state'}
   kpi_groud_id = ObjectIdField(primary_key=True, required = True)
-  kpi_config = EmbeddedDocumentListField(KpiConfigMongodb, default= [])
+  kpis_config = EmbeddedDocumentListField(KpiConfigMongodb, default= [])
 
 
 class PlaceCurrentStateMongodb(Document):
@@ -51,6 +51,7 @@ class PlaceCurrentStateMongodbRepository(PlaceCurrentStateRepository):
 
     return place_current_state
 
+
   def get_all(self) -> list[PlaceCurrentState]:
     raise NotImplementedError
 
@@ -62,22 +63,18 @@ class PlaceCurrentStateMongodbRepository(PlaceCurrentStateRepository):
 
     for kpi_group_config_mongodb in place_current_state_mongodb.kpi_groups_config:
       kpi_group_config: KpiGroupConfig = KpiGroupConfig(str(kpi_group_config_mongodb.kpi_groud_id))
+      place_current_state.get_kpi_groups_config().append(kpi_group_config)
 
-      for kpi_config_mongodb in kpi_group_config_mongodb.kpi_config:
+      for kpi_config_mongodb in kpi_group_config_mongodb.kpis_config:
         kpi_config: KpiConfig = KpiConfig(str(kpi_config_mongodb.kpi_id), str(kpi_config_mongodb.sensor_id))
+        kpi_group_config.get_kpis_config().append(kpi_config)
 
         for kpi_constant_mongodb in kpi_config_mongodb.constants:
           constant: Constant = Constant(kpi_constant_mongodb.name, kpi_constant_mongodb.value)
           kpi_config.get_constants().append(constant)
 
-        kpi_group_config.get_kpis_config().append(kpi_config)
-
-        for kpi_setpoint_mongodb in kpi_config_mongodb.setpoints:
-          setpoint: Setpoint = Setpoint(kpi_setpoint_mongodb.activation, kpi_setpoint_mongodb.value, str(kpi_setpoint_mongodb.alarm_id))
-          kpi_config.get_setpoints().append(setpoint)
-
-        kpi_group_config.get_kpis_config().append(kpi_config)
-
-      place_current_state.get_kpi_groups_config().append(kpi_group_config)
+        for alarm_config_mongodb in kpi_config_mongodb.alarms_config:
+          alarm_config: AlarmConfig = AlarmConfig(alarm_config_mongodb.activation, alarm_config_mongodb.setpoint, str(alarm_config_mongodb.alarm_id))
+          kpi_config.get_alarms_config().append(alarm_config)
 
     return place_current_state
