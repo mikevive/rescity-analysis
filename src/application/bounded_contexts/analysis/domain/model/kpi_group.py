@@ -20,11 +20,6 @@ class KpiGroup(Entity):
   class Created(Event):
     def __init__(self, kpi_group_id: str, name: str, kpis: list[str]) -> None:
 
-      # kpis_id: list[str] = []
-
-      # for kpi in kpis:
-      #   kpis_id.append(kpi.get_id())
-
       data: dict = {
         'name': name,
         'kpis': kpis
@@ -34,18 +29,13 @@ class KpiGroup(Entity):
   class Updated(Event):
     def __init__(self, kpi_group_id: str, name: str, kpis:list[str]) -> None:
 
-      # kpis_id: list[str] = []
-
-      # for kpi in kpis:
-      #   kpis_id.append(kpi.get_id())
-
       data: dict = {
         'name': name,
         'kpis': kpis
       }
       super().__init__('updated', kpi_group_id, 'kpi_group', data)
 
-  class Delete(Event):
+  class Deleted(Event):
     def __init__(self, kpi_group_id: str) -> None:
       data: dict = { }
       super().__init__('deleted', kpi_group_id, 'kpi_group', data)
@@ -57,11 +47,11 @@ class KpiGroup(Entity):
     return event
 
   def delete(self) -> Event:
-    event: Event = KpiGroup.Delete(self.get_id())
+    event: Event = KpiGroup.Deleted(self.get_id())
     return event
 
 
-class KpiGroupFactory():
+class KpiGroupFactory:
 
   def create(name: str, kpis: list[str]) -> Tuple[KpiGroup, Event]:
     kpi_group: KpiGroup = KpiGroup()

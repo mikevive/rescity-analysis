@@ -2,17 +2,17 @@ from injector import inject
 from kafka import KafkaConsumer
 from bson import json_util
 from threading import Thread
-from application.bounded_contexts.analysis.domain.model.kpi import KpiService
+from application.bounded_contexts.analysis.domain.model.place import PlaceService
 from application.services.dtos.event_dto import EventDto
 
 class OtherSourcesKafkaConsumer:
 
   @inject
-  def __init__(self, kpi_service: KpiService) -> None:
+  def __init__(self, place_service: PlaceService) -> None:
 
     # Set Handlers
     self._hanlders: dict = {
-      'created': kpi_service.calculate
+      'created': place_service.calculate
     }
 
     # Kafka Consumer Config
