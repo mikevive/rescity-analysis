@@ -1,3 +1,10 @@
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
 from flask import Flask
 from flask_injector import FlaskInjector
 from dependencies import configure
@@ -9,6 +16,8 @@ from interface.controllers.kpi_group_controller import kpi_group_controller
 from infrastructure.brokers.consumers.kpi_current_state_kafka_consumer import KpiCurrentStateKafkaConsumer
 from infrastructure.brokers.consumers.kpi_group_current_state_kafka_consumer import KpiGroupCurrentStateKafkaConsumer
 from infrastructure.brokers.consumers.other_sources_kafka_consumer import OtherSourcesKafkaConsumer
+
+
 
 # TODO: Inject Mappers
 # TODO: When to use mapper and when to instantiate a DTO?
@@ -24,9 +33,9 @@ def create_app():
 
   # Start MongoDB Connection
   connect(
-    db='analysis',
-    host='127.0.0.1',
-    port=27017
+    host=os.environ.get('MONGO_HOST'),
+    port=int(os.environ.get('MONGO_PORT')),
+    db=os.environ.get('MONGO_DB')
   )
 
   # Start Controllers

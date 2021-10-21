@@ -1,3 +1,4 @@
+import os
 from injector import inject
 from kafka import KafkaConsumer
 from bson import json_util
@@ -16,19 +17,25 @@ class OtherSourcesKafkaConsumer:
     }
 
     # Kafka Consumer Config
-    self._kafka_consumer: KafkaConsumer = KafkaConsumer(
-      'other_sources',
-      bootstrap_servers = ['127.0.0.1:9092'],
-      auto_offset_reset = 'earliest',
-      group_id = 'other_sources_kafka_consumer',
-      value_deserializer = lambda data: json_util.loads(data)
-    )
 
-    # Start Kafka Consumers as Threads
-    Thread(
-      target = self.__start_tread,
-      daemon = True
-    ).start()
+    try:
+
+      self._kafka_consumer: KafkaConsumer = KafkaConsumer(
+        'other_sources',
+        bootstrap_servers = [os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT')],
+        auto_offset_reset = 'earliest',
+        group_id = 'other_sources_kafka_consumer',
+        value_deserializer = lambda data: json_util.loads(data)
+      )
+
+      # Start Kafka Consumers as Threads
+      Thread(
+        target = self.__start_tread,
+        daemon = True
+      ).start()
+
+    except Exception:
+      print("Unable to connect to Kafka Broker")
 
 
   def __start_tread(self):
