@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from typing import List
 
 from application.services.dtos.kpi_created_dto import KpiCreatedDto
 from application.services.projections._projection import Projection

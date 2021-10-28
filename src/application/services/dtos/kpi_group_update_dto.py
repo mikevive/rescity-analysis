@@ -1,3 +1,4 @@
+from typing import List
 from bson.objectid import ObjectId, InvalidId
 
 from application.services.dtos.exceptions.exceptions import InvalidIdError, LongitudeNameError

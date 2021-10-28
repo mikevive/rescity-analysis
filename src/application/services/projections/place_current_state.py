@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from typing import List
 
 from application.services.dtos.place_created_dto import PlaceCreatedDto
 from application.services.projections._projection import Projection

@@ -1,3 +1,4 @@
+from typing import List
 from application.services.projections.kpi_current_state import KpiCurrentState, KpiCurrentStateRepository
 from mongoengine import Document, StringField, ObjectIdField, DateTimeField
 from bson import ObjectId

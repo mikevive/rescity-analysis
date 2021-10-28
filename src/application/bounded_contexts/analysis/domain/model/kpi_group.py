@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Tuple
+from typing import List, Tuple
 
 from application.bounded_contexts.analysis.domain.model._entity import Entity
 from application.bounded_contexts.analysis.domain.model._event import Event

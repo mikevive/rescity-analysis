@@ -1,3 +1,4 @@
+from typing import List
 from injector import inject
 
 from application.bounded_contexts.analysis.domain.model._event import Event

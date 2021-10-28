@@ -1,3 +1,4 @@
+from typing import List
 from bson import ObjectId
 from mongoengine import Document, StringField, ObjectIdField, DateTimeField, ReferenceField, ListField
 
