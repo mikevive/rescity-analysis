@@ -6,7 +6,7 @@ from application.services.dtos.event_dto import EventDto
 
 class KpiGroupCurrentState(Projection):
 
-  def __init__(self, id: str, name: str, kpis: list[str] = [], created_datetime:str = None, updated_datetime:str = None) -> None:
+  def __init__(self, id: str, name: str, kpis: List[str] = [], created_datetime:str = None, updated_datetime:str = None) -> None:
     super().__init__(id, created_datetime, updated_datetime)
     self._name = name
     self._kpis = kpis
@@ -14,14 +14,14 @@ class KpiGroupCurrentState(Projection):
   def get_name(self) -> str:
     return self._name
 
-  def get_kpis(self) -> list[str]:
+  def get_kpis(self) -> List[str]:
     return self._kpis
 
   def set_name(self, name: str) -> None:
     self._name = name
     self.set_updated_datetime()
 
-  def set_kpis(self, kpis: list[str]) -> None:
+  def set_kpis(self, kpis: List[str]) -> None:
     self._kpis = kpis
     self.set_updated_datetime()
 
@@ -52,7 +52,7 @@ class KpiGroupCurrentStateRepository(metaclass=ABCMeta):
     raise NotImplementedError
 
   @abstractmethod
-  def get_all(self) -> list[KpiGroupCurrentState]:
+  def get_all(self) -> List[KpiGroupCurrentState]:
     raise NotImplementedError
 
   @abstractmethod

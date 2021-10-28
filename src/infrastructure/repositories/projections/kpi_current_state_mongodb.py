@@ -25,7 +25,7 @@ class KpiCurrentStateMongodbRepository(KpiCurrentStateRepository):
 
     return kpi_current_state
 
-  def get_all(self) -> list[KpiCurrentState]:
+  def get_all(self) -> List[KpiCurrentState]:
     raise NotImplementedError
 
 

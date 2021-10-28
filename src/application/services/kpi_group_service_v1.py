@@ -23,7 +23,7 @@ class KpiGroupServiceV1(KpiGroupService):
   def create(self, kpi_group_create_dto: KpiGroupCreateDto) -> str:
     # TODO: VALIDATE KPI GROUP NAME DOESN'T EXIST
 
-    errors: list[Exception] = []
+    errors: List[Exception] = []
     for kpi in kpi_group_create_dto.get_kpis():
       print(kpi)
       kpi_created_dto: KpiGroupCreatedDto = KpiGroupCreatedDto(kpi)
@@ -52,7 +52,7 @@ class KpiGroupServiceV1(KpiGroupService):
     except KpiGroupNotFoundError as error:
       raise error
 
-    errors: list[Exception] = []
+    errors: List[Exception] = []
     for kpi in kpi_group_update_dto.get_kpis():
       print(kpi)
       kpi_created_dto: KpiGroupCreatedDto = KpiGroupCreatedDto(kpi)

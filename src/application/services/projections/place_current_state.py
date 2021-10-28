@@ -50,11 +50,11 @@ class Constant:
 
 class KpiConfig:
 
-  def __init__(self, kpi_id: str, sensor_id: str, constants: list[Constant] = None, alarms_config: list[AlarmConfig] = None) -> None:
+  def __init__(self, kpi_id: str, sensor_id: str, constants: List[Constant] = None, alarms_config: List[AlarmConfig] = None) -> None:
     self._kpi_id: str = kpi_id
     self._sensor_id: str = sensor_id
-    self._constants: list[Constant] = constants or []
-    self._alarms_config: list[AlarmConfig] = alarms_config or []
+    self._constants: List[Constant] = constants or []
+    self._alarms_config: List[AlarmConfig] = alarms_config or []
 
   def get_kpi_id(self) -> str:
     return self._kpi_id
@@ -62,48 +62,48 @@ class KpiConfig:
   def get_sensor_id(self) -> str:
     return self._sensor_id
 
-  def get_constants(self) -> list[Constant]:
+  def get_constants(self) -> List[Constant]:
     return self._constants
 
-  def get_alarms_config(self) -> list[Constant]:
+  def get_alarms_config(self) -> List[Constant]:
     return self._alarms_config
 
   def set_sensor_id(self, sensor_id: str) -> None:
     self._sensor_id = sensor_id
 
-  def set_constants(self, constants: list[Constant]) -> None:
+  def set_constants(self, constants: List[Constant]) -> None:
     self._constants = constants
 
-  def set_alarms_config(self, alarms_config: list[AlarmConfig]) -> None:
+  def set_alarms_config(self, alarms_config: List[AlarmConfig]) -> None:
     self._alarms_config = alarms_config
 
 
 class KpiGroupConfig:
 
-  def __init__(self, kpi_group_id: str, kpis_config: list[KpiConfig] = []) -> None:
+  def __init__(self, kpi_group_id: str, kpis_config: List[KpiConfig] = []) -> None:
     self._kpi_group_id: str = kpi_group_id
-    self._kpis_config: list[KpiConfig] = kpis_config
+    self._kpis_config: List[KpiConfig] = kpis_config
 
   def get_kpi_group_id(self) -> str:
     return self._kpi_group_id
 
-  def get_kpis_config(self) -> list[KpiConfig]:
+  def get_kpis_config(self) -> List[KpiConfig]:
     return self._kpis_config
 
-  def set_kpis_config(self, kpis_config: list[KpiConfig]) -> None:
+  def set_kpis_config(self, kpis_config: List[KpiConfig]) -> None:
     self._kpis_config = kpis_config
 
 
 class PlaceCurrentState(Projection):
 
-  def __init__(self, id: str, kpi_groups_config: list[KpiGroupConfig] = [], created_datetime:str = None, updated_datetime:str = None) -> None:
+  def __init__(self, id: str, kpi_groups_config: List[KpiGroupConfig] = [], created_datetime:str = None, updated_datetime:str = None) -> None:
     super().__init__(id, created_datetime, updated_datetime)
-    self._kpi_groups_config: list[KpiGroupConfig] = kpi_groups_config
+    self._kpi_groups_config: List[KpiGroupConfig] = kpi_groups_config
 
-  def get_kpi_groups_config(self) -> list[KpiGroupConfig]:
+  def get_kpi_groups_config(self) -> List[KpiGroupConfig]:
     return self._kpi_groups_config
 
-  def set_kpi_groups_config(self, kpi_groups_config: list[KpiGroupConfig]) -> None:
+  def set_kpi_groups_config(self, kpi_groups_config: List[KpiGroupConfig]) -> None:
     self._kpi_groups_config = kpi_groups_config
     self.set_updated_datetime()
 
@@ -122,5 +122,5 @@ class PlaceCurrentStateRepository(metaclass=ABCMeta):
     raise NotImplementedError
 
   @abstractmethod
-  def get_all(self) -> list[PlaceCurrentState]:
+  def get_all(self) -> List[PlaceCurrentState]:
     raise NotImplementedError

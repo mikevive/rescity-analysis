@@ -4,7 +4,7 @@ from application.services.dtos.exceptions.exceptions import InvalidIdError, Long
 
 class KpiGroupUpdateDto():
 
-  def __init__(self, id: str, name: str, kpis: list[str]) -> None:
+  def __init__(self, id: str, name: str, kpis: List[str]) -> None:
     try:
       ObjectId(id)
     except InvalidId:
@@ -31,5 +31,5 @@ class KpiGroupUpdateDto():
   def get_name(self) -> str:
     return self.name
 
-  def get_kpis(self) -> list[str]:
+  def get_kpis(self) -> List[str]:
     return self.kpis

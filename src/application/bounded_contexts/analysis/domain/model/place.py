@@ -14,9 +14,9 @@ class Place(Entity):
   # Events
 
   class Calculated(Event):
-    def __init__(self, place_id: str, kpi_id: str, result: float, alarms: list) -> None:
+    def __init__(self, place_id: str, kpi_id: str, result: float, alarms: List) -> None:
 
-      alarms_mapped: list = []
+      alarms_mapped: List = []
       for alarm in alarms:
         alarms_mapped.append({
           'alarm_id:': alarm.get_alarm_id(),
@@ -33,15 +33,13 @@ class Place(Entity):
 
   # Behaviours
 
-  # TODO: Type constant list
   def calculate(self, equation:str, input:float, kpi_config: KpiConfig) -> Event:
     globals()['x'] = input
     for constant in kpi_config.get_constants():
       globals()[constant.get_name()] = constant.get_value()
 
     result: float = eval(equation)
-    # TODO: Calculate Alarm
-    alarms: list = []
+    alarms: List = []
     print(f'result:{result}')
     print(f'alarms_config found on kpi_config:{len(kpi_config.get_alarms_config())}')
     for alarm_config in kpi_config.get_alarms_config():
@@ -56,7 +54,6 @@ class Place(Entity):
 
       else:
         print("NO")
-    # TODO: Get Setpoint
     event: Event = Place.Calculated(self.get_id(), kpi_config.get_kpi_id(), result, alarms)
     return event
 

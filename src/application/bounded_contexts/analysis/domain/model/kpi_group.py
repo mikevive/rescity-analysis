@@ -16,9 +16,9 @@ class KpiGroup(Entity):
 
   # Events
 
-  # TODO: use list[Kpi]
+  # TODO: use List[Kpi]
   class Created(Event):
-    def __init__(self, kpi_group_id: str, name: str, kpis: list[str]) -> None:
+    def __init__(self, kpi_group_id: str, name: str, kpis: List[str]) -> None:
 
       data: dict = {
         'name': name,
@@ -27,7 +27,7 @@ class KpiGroup(Entity):
       super().__init__('created', kpi_group_id, 'kpi_group', data)
 
   class Updated(Event):
-    def __init__(self, kpi_group_id: str, name: str, kpis:list[str]) -> None:
+    def __init__(self, kpi_group_id: str, name: str, kpis:List[str]) -> None:
 
       data: dict = {
         'name': name,
@@ -42,7 +42,7 @@ class KpiGroup(Entity):
 
   # Behaviours
 
-  def update(self, name: str, kpis: list[str]) -> Event:
+  def update(self, name: str, kpis: List[str]) -> Event:
     event: Event = KpiGroup.Updated(self.get_id(), name, kpis)
     return event
 
@@ -53,7 +53,7 @@ class KpiGroup(Entity):
 
 class KpiGroupFactory:
 
-  def create(name: str, kpis: list[str]) -> Tuple[KpiGroup, Event]:
+  def create(name: str, kpis: List[str]) -> Tuple[KpiGroup, Event]:
     kpi_group: KpiGroup = KpiGroup()
     event: Event = KpiGroup.Created(kpi_group.get_id(), name, kpis)
     return kpi_group, event

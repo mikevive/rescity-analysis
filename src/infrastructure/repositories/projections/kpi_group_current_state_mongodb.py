@@ -27,7 +27,7 @@ class KpiGroupCurrentStateMongodbRepository(KpiGroupCurrentStateRepository):
 
     return kpi_group_current_state
 
-  def get_all(self) -> list[KpiGroupCurrentState]:
+  def get_all(self) -> List[KpiGroupCurrentState]:
     raise NotImplementedError
 
 
@@ -44,7 +44,7 @@ class KpiGroupCurrentStateMongodbRepository(KpiGroupCurrentStateRepository):
   # TODO: Inject Mappers
   def __to_entity(self, kpi_group_current_state_mongodb: KpiGroupCurrentStateMongodb) -> KpiGroupCurrentState:
 #
-    kpis_id: list[str] = []
+    kpis_id: List[str] = []
 
     for kpi_current_state_mongodb_id in kpi_group_current_state_mongodb.kpis:
         kpis_id.append(str(kpi_current_state_mongodb_id))
@@ -60,7 +60,7 @@ class KpiGroupCurrentStateMongodbRepository(KpiGroupCurrentStateRepository):
 
   def __to_data(self, kpi_group_current_state: KpiGroupCurrentState) -> KpiGroupCurrentStateMongodb:
 
-    kpis: list[ObjectId] = []
+    kpis: List[ObjectId] = []
 
     for kpi_current_state_id in kpi_group_current_state.get_kpis():
       kpi = ObjectId(kpi_current_state_id)

@@ -52,7 +52,7 @@ class PlaceCurrentStateMongodbRepository(PlaceCurrentStateRepository):
     return place_current_state
 
 
-  def get_all(self) -> list[PlaceCurrentState]:
+  def get_all(self) -> List[PlaceCurrentState]:
     raise NotImplementedError
 
 

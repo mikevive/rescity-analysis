@@ -60,7 +60,7 @@ class KpiCurrentStateRepository(metaclass=ABCMeta):
     raise NotImplementedError
 
   @abstractmethod
-  def get_all(self) -> list[KpiCurrentState]:
+  def get_all(self) -> List[KpiCurrentState]:
     raise NotImplementedError
 
   @abstractmethod
