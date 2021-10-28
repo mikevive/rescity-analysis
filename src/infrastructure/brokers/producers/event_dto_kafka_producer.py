@@ -16,7 +16,7 @@ class EventDtoKafkaProducer(EventDtoProducer):
       )
 
     except Exception:
-      print("Unable to connect to Kafka Broker")
+      print("Unable to connect to Kafka Broker: " + os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT'))
 
 
   def publish(self, topic: str, event_dto: EventDto) -> None:

@@ -35,7 +35,7 @@ class OtherSourcesKafkaConsumer:
       ).start()
 
     except Exception:
-      print("Unable to connect to Kafka Broker")
+      print("Unable to connect to Kafka Broker: " + os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT'))
 
 
   def __start_tread(self):
