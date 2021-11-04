@@ -6,7 +6,7 @@ from threading import Thread
 from application.bounded_contexts.analysis.domain.model.place import PlaceService
 from application.services.dtos.event_dto import EventDto
 
-class OtherSourcesKafkaConsumer:
+class SensorKafkaConsumer:
 
   @inject
   def __init__(self, place_service: PlaceService) -> None:

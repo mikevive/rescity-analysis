@@ -13,7 +13,7 @@ from interface.controllers.kpi_controller import kpi_controller
 from interface.controllers.kpi_group_controller import kpi_group_controller
 from infrastructure.brokers.consumers.kpi_current_state_kafka_consumer import KpiCurrentStateKafkaConsumer
 from infrastructure.brokers.consumers.kpi_group_current_state_kafka_consumer import KpiGroupCurrentStateKafkaConsumer
-from infrastructure.brokers.consumers.other_sources_kafka_consumer import OtherSourcesKafkaConsumer
+from infrastructure.brokers.consumers.sensor_kafka_consumer import SensorKafkaConsumer
 
 
 
@@ -45,6 +45,6 @@ def create_app():
   # Start Kafka Consumers
   flask_injector.injector.get(KpiCurrentStateKafkaConsumer)
   flask_injector.injector.get(KpiGroupCurrentStateKafkaConsumer)
-  flask_injector.injector.get(OtherSourcesKafkaConsumer)
+  flask_injector.injector.get(SensorKafkaConsumer)
 
   return app
