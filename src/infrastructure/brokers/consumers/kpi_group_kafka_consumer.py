@@ -4,19 +4,19 @@ from kafka import KafkaConsumer
 from bson import json_util
 from threading import Thread
 
-from application.services.projections.kpi_current_state import KpiCurrentStateService
+from application.services.projections.kpi_group_current_state import KpiGroupCurrentStateService
 from application.services.dtos.event_dto import EventDto
 
-class KpiCurrentStateKafkaConsumer:
+class KpiGroupKafkaConsumer:
 
   @inject
-  def __init__(self, kpi_current_state_service: KpiCurrentStateService) -> None:
+  def __init__(self, kpi_group_current_state_service: KpiGroupCurrentStateService) -> None:
 
     # Set Handlers
     self._hanlders: dict = {
-      'created': kpi_current_state_service.create,
-      'updated': kpi_current_state_service.update,
-      'deleted': kpi_current_state_service.delete,
+      'created': kpi_group_current_state_service.create,
+      'updated': kpi_group_current_state_service.update,
+      'deleted': kpi_group_current_state_service.delete,
     }
 
     # Kafka Consumer Config
@@ -24,10 +24,10 @@ class KpiCurrentStateKafkaConsumer:
     try:
 
       self._kafka_consumer: KafkaConsumer = KafkaConsumer(
-        'kpi',
+        'kpi_group',
         bootstrap_servers = [os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT')],
         auto_offset_reset = 'earliest',
-        group_id = 'kpi_current_state_kafka_consumer',
+        group_id = 'kpi_group_kafka_consumer',
         value_deserializer = lambda data: json_util.loads(data)
       )
 
@@ -53,5 +53,4 @@ class KpiCurrentStateKafkaConsumer:
       try:
         self._hanlders[event_type](event_dto)
       except KeyError:
-        print(f'>> Handler not implemented')
         pass

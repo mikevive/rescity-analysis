@@ -11,8 +11,8 @@ from mongoengine import connect
 # Driving Adapters
 from interface.controllers.kpi_controller import kpi_controller
 from interface.controllers.kpi_group_controller import kpi_group_controller
-from infrastructure.brokers.consumers.kpi_current_state_kafka_consumer import KpiCurrentStateKafkaConsumer
-from infrastructure.brokers.consumers.kpi_group_current_state_kafka_consumer import KpiGroupCurrentStateKafkaConsumer
+from infrastructure.brokers.consumers.kpi_kafka_consumer import KpiKafkaConsumer
+from infrastructure.brokers.consumers.kpi_group_kafka_consumer import KpiGroupKafkaConsumer
 from infrastructure.brokers.consumers.sensor_kafka_consumer import SensorKafkaConsumer
 
 
@@ -43,8 +43,8 @@ def create_app():
   flask_injector = FlaskInjector(app=app, modules=[configure])
 
   # Start Kafka Consumers
-  flask_injector.injector.get(KpiCurrentStateKafkaConsumer)
-  flask_injector.injector.get(KpiGroupCurrentStateKafkaConsumer)
+  flask_injector.injector.get(KpiKafkaConsumer)
+  flask_injector.injector.get(KpiGroupKafkaConsumer)
   flask_injector.injector.get(SensorKafkaConsumer)
 
   return app
