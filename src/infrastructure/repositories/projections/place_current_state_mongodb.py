@@ -22,6 +22,7 @@ class KpiConfigMongodb(EmbeddedDocument):
   meta = {'collection': 'place_current_state'}
   kpi_id = ObjectIdField(primary_key=True, required = True)
   sensor_id = ObjectIdField(required = True)
+  measurement = StringField(max_length = 100, required = True)
   constants = EmbeddedDocumentListField(ConstantMongodb, default= [])
   alarms_config = EmbeddedDocumentListField(AlarmConfigMongodb, default= [])
 
@@ -67,7 +68,7 @@ class PlaceCurrentStateMongodbRepository(PlaceCurrentStateRepository):
       place_current_state.get_kpi_groups_config().append(kpi_group_config)
 
       for kpi_config_mongodb in kpi_group_config_mongodb.kpis_config:
-        kpi_config: KpiConfig = KpiConfig(str(kpi_config_mongodb.kpi_id), str(kpi_config_mongodb.sensor_id))
+        kpi_config: KpiConfig = KpiConfig(str(kpi_config_mongodb.kpi_id), str(kpi_config_mongodb.sensor_id), kpi_config_mongodb.measurement)
         kpi_group_config.get_kpis_config().append(kpi_config)
 
         for kpi_constant_mongodb in kpi_config_mongodb.constants:

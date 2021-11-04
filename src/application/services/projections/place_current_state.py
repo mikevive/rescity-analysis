@@ -51,9 +51,10 @@ class Constant:
 
 class KpiConfig:
 
-  def __init__(self, kpi_id: str, sensor_id: str, constants: List[Constant] = None, alarms_config: List[AlarmConfig] = None) -> None:
+  def __init__(self, kpi_id: str, sensor_id: str, measurement: str, constants: List[Constant] = None, alarms_config: List[AlarmConfig] = None) -> None:
     self._kpi_id: str = kpi_id
     self._sensor_id: str = sensor_id
+    self._measurement: str = measurement
     self._constants: List[Constant] = constants or []
     self._alarms_config: List[AlarmConfig] = alarms_config or []
 
@@ -63,6 +64,9 @@ class KpiConfig:
   def get_sensor_id(self) -> str:
     return self._sensor_id
 
+  def get_measurement(self) -> str:
+    return self._measurement
+
   def get_constants(self) -> List[Constant]:
     return self._constants
 
@@ -71,6 +75,9 @@ class KpiConfig:
 
   def set_sensor_id(self, sensor_id: str) -> None:
     self._sensor_id = sensor_id
+
+  def set_measurement(self, measurement: str) -> None:
+    self._measurement = measurement
 
   def set_constants(self, constants: List[Constant]) -> None:
     self._constants = constants

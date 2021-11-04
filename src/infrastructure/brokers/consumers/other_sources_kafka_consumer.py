@@ -13,7 +13,7 @@ class OtherSourcesKafkaConsumer:
 
     # Set Handlers
     self._hanlders: dict = {
-      'created': place_service.calculate
+      'calculated': place_service.calculate
     }
 
     # Kafka Consumer Config
@@ -21,10 +21,10 @@ class OtherSourcesKafkaConsumer:
     try:
 
       self._kafka_consumer: KafkaConsumer = KafkaConsumer(
-        'other_sources',
+        'sensor',
         bootstrap_servers = [os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT')],
         auto_offset_reset = 'earliest',
-        group_id = 'other_sources_kafka_consumer',
+        group_id = 'sensor_kafka_consumer',
         value_deserializer = lambda data: json_util.loads(data)
       )
 

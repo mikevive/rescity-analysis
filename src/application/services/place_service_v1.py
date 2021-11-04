@@ -1,3 +1,4 @@
+from typing import List
 from injector import inject
 
 from application.bounded_contexts.analysis.domain.model._event import Event
@@ -21,8 +22,8 @@ class PlaceServiceV1(PlaceService):
   def calculate(self, event_dto: EventDto) -> None:
     data: dict = event_dto.get_data()
     place_id: str = data['place_id']
-    sensor_id: float = data['sensor_id']
-    sensor_value: str = data['sensor_value']
+    sensor_id: str = event_dto.get_aggregate_id()
+    measurements: List[dict] = data['measurements']
 
     place_created_dto: PlaceCreatedDto = PlaceCreatedDto(place_id)
 
@@ -35,20 +36,29 @@ class PlaceServiceV1(PlaceService):
 
     for kpi_group_config in place_current_state.get_kpi_groups_config():
       for kpi_config in kpi_group_config.get_kpis_config():
-        if(kpi_config.get_sensor_id() == sensor_id):
+        if kpi_config.get_sensor_id() == sensor_id:
 
-          kpi_created_dto: KpiCreatedDto = KpiCreatedDto(kpi_config.get_kpi_id())
+          for measurement in measurements:
+            print(measurement)
+            if measurement.get('name') == kpi_config.get_measurement():
+              value_found: float = measurement.get('value')
 
-          try:
-            kpi_current_state: KpiCurrentState = self._kpi_current_state_service.get_by_id(kpi_created_dto)
-          except KpiNotFoundError as error:
-            raise error
+              kpi_created_dto: KpiCreatedDto = KpiCreatedDto(kpi_config.get_kpi_id())
 
-          equation: str = kpi_current_state.get_equation()
+              try:
+                kpi_current_state: KpiCurrentState = self._kpi_current_state_service.get_by_id(kpi_created_dto)
+              except KpiNotFoundError as error:
+                raise error
 
-          event: Event = place.calculate(equation, sensor_value, kpi_config)
-          event_dto: EventDto = EventMapper.to_dto(event)
-          self._event_dto_producer.publish('place', event_dto)
+              equation: str = kpi_current_state.get_equation()
+
+              event: Event = place.calculate(equation, value_found, kpi_config)
+              event_dto: EventDto = EventMapper.to_dto(event)
+              self._event_dto_producer.publish('place', event_dto)
+
+            else:
+              # TODO: If measurement not found what?
+              print('measurement not found')
 
         else:
           # TODO: If sensor not found what?
