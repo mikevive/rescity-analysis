@@ -17,26 +17,30 @@ class SensorKafkaConsumer:
     }
 
     # Kafka Consumer Config
+    while True:
+      try:
 
-    try:
+        self._kafka_consumer: KafkaConsumer = KafkaConsumer(
+          'sensor',
+          bootstrap_servers = [os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT')],
+          auto_offset_reset = 'earliest',
+          group_id = 'sensor_kafka_consumer',
+          value_deserializer = lambda data: json_util.loads(data),
+          reconnect_backoff_ms = 50,
+          reconnect_backoff_max_ms = 1000
+        )
 
-      self._kafka_consumer: KafkaConsumer = KafkaConsumer(
-        'sensor',
-        bootstrap_servers = [os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT')],
-        auto_offset_reset = 'earliest',
-        group_id = 'sensor_kafka_consumer',
-        value_deserializer = lambda data: json_util.loads(data)
-      )
+        # Start Kafka Consumers as Threads
+        Thread(
+          target = self.__start_tread,
+          daemon = True
+        ).start()
 
-      # Start Kafka Consumers as Threads
-      Thread(
-        target = self.__start_tread,
-        daemon = True
-      ).start()
+      except Exception:
+        print("Unable to connect to Kafka Broker: " + os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT'))
+        continue
 
-    except Exception:
-      print("Unable to connect to Kafka Broker: " + os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT'))
-
+      break
 
   def __start_tread(self):
     for msg in self._kafka_consumer:

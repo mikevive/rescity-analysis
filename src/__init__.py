@@ -33,7 +33,9 @@ def create_app():
   connect(
     host=os.environ.get('MONGO_HOST'),
     port=int(os.environ.get('MONGO_PORT')),
-    db=os.environ.get('MONGO_DB')
+    db=os.environ.get('MONGO_DB'),
+    username=os.environ.get('MONGO_USER'),
+    password=os.environ.get('MONGO_PASS')
   )
 
   # Start Controllers
