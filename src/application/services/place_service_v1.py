@@ -36,12 +36,10 @@ class PlaceServiceV1(PlaceService):
 
     place: Place = PlaceFactory.instantiate(place_id)
 
-    print("🔥🔥🔥🔥🔥")
-
     for kpi_group_config in place_current_state.get_kpi_groups_config():
-      print("💧 kpi group")
+      print("kpi group")
       for kpi_config in kpi_group_config.get_kpis_config():
-        print("🍾 kpi config")
+        print("kpi config")
         sensorId = kpi_config.get_sensor_id()
         if kpi_config.get_sensor_id() == sensor_id:
           print(f'sensor {sensorId} found')
