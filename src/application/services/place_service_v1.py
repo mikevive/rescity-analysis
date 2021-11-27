@@ -32,15 +32,24 @@ class PlaceServiceV1(PlaceService):
     except PlaceNotFoundError as error:
       raise error
 
+    print(f"kpi_group_config found: {len(place_current_state.get_kpi_groups_config())}")
+
     place: Place = PlaceFactory.instantiate(place_id)
 
-    for kpi_group_config in place_current_state.get_kpi_groups_config():
-      for kpi_config in kpi_group_config.get_kpis_config():
-        if kpi_config.get_sensor_id() == sensor_id:
+    print("🔥🔥🔥🔥🔥")
 
+    for kpi_group_config in place_current_state.get_kpi_groups_config():
+      print("💧 kpi group")
+      for kpi_config in kpi_group_config.get_kpis_config():
+        print("🍾 kpi config")
+        sensorId = kpi_config.get_sensor_id()
+        if kpi_config.get_sensor_id() == sensor_id:
+          print(f'sensor {sensorId} found')
           for measurement in measurements:
             print(measurement)
+            measurementName = measurement.get('name')
             if measurement.get('name') == kpi_config.get_measurement():
+              print(f'measurement {measurementName} found')
               value_found: float = measurement.get('value')
 
               kpi_created_dto: KpiCreatedDto = KpiCreatedDto(kpi_config.get_kpi_id())
@@ -58,8 +67,8 @@ class PlaceServiceV1(PlaceService):
 
             else:
               # TODO: If measurement not found what?
-              print('measurement not found')
+              print(f'measurement {measurementName} not found')
 
         else:
           # TODO: If sensor not found what?
-          print('sensor not found')
+          print(f'sensor {sensorId} not found')

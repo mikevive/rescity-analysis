@@ -7,10 +7,10 @@ from application.services.dtos.event_dto import EventDto
 
 class KpiGroupCurrentState(Projection):
 
-  def __init__(self, id: str, name: str, kpis: List[str] = [], created_datetime:str = None, updated_datetime:str = None) -> None:
+  def __init__(self, id: str, name: str, kpis: List[str] = None, created_datetime:str = None, updated_datetime:str = None) -> None:
     super().__init__(id, created_datetime, updated_datetime)
     self._name = name
-    self._kpis = kpis
+    self._kpis = kpis or []
 
   def get_name(self) -> str:
     return self._name

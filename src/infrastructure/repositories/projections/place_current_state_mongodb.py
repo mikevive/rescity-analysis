@@ -60,7 +60,7 @@ class PlaceCurrentStateMongodbRepository(PlaceCurrentStateRepository):
 
   # TODO: Inject Mappers
   def __to_entity(self, place_current_state_mongodb: PlaceCurrentStateMongodb) -> PlaceCurrentState:
-
+    place_current_state = None
     place_current_state: PlaceCurrentState = PlaceCurrentState(place_current_state_mongodb.id)
 
     for kpi_group_config_mongodb in place_current_state_mongodb.kpi_groups_config:

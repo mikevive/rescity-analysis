@@ -20,9 +20,9 @@ class Place(Entity):
       alarms_mapped: List = []
       for alarm in alarms:
         alarms_mapped.append({
-          'alarm_id:': alarm.get_alarm_id(),
-          'activation:': alarm.get_activation(),
-          'setpoint:': alarm.get_setpoint()
+          'alarm_id': alarm.get_alarm_id(),
+          'activation': alarm.get_activation(),
+          'setpoint': alarm.get_setpoint()
         })
 
       data: dict = {
@@ -44,7 +44,7 @@ class Place(Entity):
     print(f'result:{result}')
     print(f'alarms_config found on kpi_config:{len(kpi_config.get_alarms_config())}')
     for alarm_config in kpi_config.get_alarms_config():
-      print(f"{result} is {alarm_config.get_activation()} {alarm_config.get_setpoint()}")
+      print(f"{result} is {alarm_config.get_activation()} {alarm_config.get_setpoint()}?")
       if(alarm_config.get_activation() == 'GREATER_THAN' and result > alarm_config.get_setpoint()):
         print("YES")
         alarms.append(alarm_config)

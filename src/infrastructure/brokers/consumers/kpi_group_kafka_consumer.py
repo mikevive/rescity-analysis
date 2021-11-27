@@ -20,29 +20,23 @@ class KpiGroupKafkaConsumer:
     }
 
     # Kafka Consumer Config
-    while True:
-      try:
+    try:
 
-        self._kafka_consumer: KafkaConsumer = KafkaConsumer(
-          'kpi_group',
-          bootstrap_servers = [os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT')],
-          auto_offset_reset = 'earliest',
-          group_id = 'kpi_group_kafka_consumer',
-          value_deserializer = lambda data: json_util.loads(data)
-        )
+      self._kafka_consumer: KafkaConsumer = KafkaConsumer(
+        'kpi_group',
+        bootstrap_servers = [os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT')],
+        group_id = 'analysis_kpi_group_kafka_consumer',
+        value_deserializer = lambda data: json_util.loads(data)
+      )
 
-        # Start Kafka Consumers as Threads
-        Thread(
-          target = self.__start_tread,
-          daemon = True
-        ).start()
+      # Start Kafka Consumers as Threads
+      Thread(
+        target = self.__start_tread,
+        daemon = True
+      ).start()
 
-      except Exception:
-        print("Unable to connect to Kafka Broker: " + os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT'))
-        continue
-
-      break
-
+    except Exception:
+      print("Unable to connect to Kafka Broker: " + os.environ.get('KAFKA_HOST')+':'+os.environ.get('KAFKA_PORT'))
 
   def __start_tread(self):
     for msg in self._kafka_consumer:

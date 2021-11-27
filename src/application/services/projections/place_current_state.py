@@ -88,9 +88,9 @@ class KpiConfig:
 
 class KpiGroupConfig:
 
-  def __init__(self, kpi_group_id: str, kpis_config: List[KpiConfig] = []) -> None:
+  def __init__(self, kpi_group_id: str, kpis_config: List[KpiConfig] = None) -> None:
     self._kpi_group_id: str = kpi_group_id
-    self._kpis_config: List[KpiConfig] = kpis_config
+    self._kpis_config: List[KpiConfig] = kpis_config or []
 
   def get_kpi_group_id(self) -> str:
     return self._kpi_group_id
@@ -104,9 +104,9 @@ class KpiGroupConfig:
 
 class PlaceCurrentState(Projection):
 
-  def __init__(self, id: str, kpi_groups_config: List[KpiGroupConfig] = [], created_datetime:str = None, updated_datetime:str = None) -> None:
+  def __init__(self, id: str, kpi_groups_config: List[KpiGroupConfig] = None, created_datetime:str = None, updated_datetime:str = None) -> None:
     super().__init__(id, created_datetime, updated_datetime)
-    self._kpi_groups_config: List[KpiGroupConfig] = kpi_groups_config
+    self._kpi_groups_config: List[KpiGroupConfig] = kpi_groups_config or []
 
   def get_kpi_groups_config(self) -> List[KpiGroupConfig]:
     return self._kpi_groups_config
